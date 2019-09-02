@@ -73,4 +73,5 @@ dump_release_tntvillage_2019-08-30.csv
 *.sqlite
 *.slite3
 *.db
+*.csv
 config.toml

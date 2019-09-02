@@ -6,7 +6,6 @@ from telegram.ext import (
     CommandHandler,
     MessageHandler,
     ConversationHandler,
-    CallbackContext,
     Filters
 )
 # noinspection PyPackageRequirements
@@ -19,43 +18,10 @@ from bot.markups import Keyboard
 from bot.markups import InlineKeyboard
 from .fallback_commands import cancel_command
 from ..utils import decorators
-from ..utils import utils
 
 logger = logging.getLogger(__name__)
 
 WAITING_RELEASE = range(1)
-
-CATEGORIE = {
-    1: 'Film TV e programmi',
-    2: 'Musica',
-    3: 'E Books',
-    4: 'Film',
-    6: 'Linux',
-    7: 'Anime',
-    8: 'Cartoni',
-    9: 'Macintosh',
-    10: 'Windows Software',
-    11: 'Pc Game',
-    12: 'Playstation',
-    13: 'Students Releases',
-    14: 'Documentari',
-    21: 'Video Musicali',
-    22: 'Sport',
-    23: 'Teatro',
-    24: 'Wrestling',
-    25: 'Varie',
-    26: 'Xbox',
-    27: 'Immagini sfondi',
-    28: 'Altri Giochi',
-    29: 'Serie TV',
-    30: 'Fumetteria',
-    31: 'Trash',
-    32: 'Nintendo',
-    34: 'A Book',
-    35: 'Podc: st',
-    36: 'Edicola',
-    37: 'Mobile'
-}
 
 
 def search_release(update: Update, status_to_return_on_invalid_query=ConversationHandler.END):
@@ -86,7 +52,7 @@ def on_search_query(update: Update, _):
 
 @decorators.action(ChatAction.TYPING)
 @decorators.failwithmessage
-def on_release_selected(update: Update, context: CallbackContext):
+def on_release_selected(update: Update, _):
     logger.info('%d: user selected the release from the keyboard', update.effective_user.id)
 
     release_match = re.search(r'^(\d+)\.\s.*', update.message.text)
@@ -95,22 +61,11 @@ def on_release_selected(update: Update, context: CallbackContext):
         return search_release(update, WAITING_RELEASE)
     
     release_id = release_match.group(1)
-    release = db.release_by_id(release_id, as_dict=True)
+    release = db.release_by_id(release_id)
     
-    forum_url = 'http://forum.tntvillage.scambioetico.org/index.php?showtopic={}'.format(release['topic'])
-    release_string = Strings.RELEASE.format(
-        titolo=utils.html_escape(release['titolo']),
-        descrizione=utils.html_escape(release['descrizione']),
-        dimensione=utils.human_readable_size(release['dimensione']),
-        autore=utils.html_escape(release['autore']),
-        categoria=CATEGORIE[release['categoria']],
-        data=release['data'],
-        magnet='magnet:?xt=urn:btih:{}'.format(release['hash'])
-        # forum_url=forum_url,
-        # webarchive_url='https://web.archive.org/web/{}'.format(forum_url)
-    )
+    release_string = Strings.RELEASE.format(**release)
     
-    reply_markup = InlineKeyboard.forum_urls(forum_url, 'https://web.archive.org/web/{}'.format(forum_url))
+    reply_markup = InlineKeyboard.release_info(release_id, release['webarchive_url'])
     update.message.reply_html(release_string, disable_web_page_preview=True, reply_markup=reply_markup)
 
     return WAITING_RELEASE

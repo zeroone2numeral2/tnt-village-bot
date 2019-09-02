@@ -40,4 +40,8 @@ class Strings:
                   "fatto a proprio rischio. Riteniamo fondamentale un compromesso tra il rispetto del diritto d'autore "
                   "e il rispetto del diritto alla diffusione dell'arte e della conoscenza.")
     
-    CANCEL = "Ok, apposto così"
+    CANCEL = "Ok, a posto così"
+
+    CB_ANSWER_TRACKERS = "Ecco il magnet coi trackers"
+
+    CB_ANSWER_COLLAPSED = "Informazioni sulla release"
