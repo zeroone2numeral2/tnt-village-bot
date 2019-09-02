@@ -2,7 +2,19 @@ class Strings:
     START_MESSAGE = ("Ciao,\n\n"
                      "Digita una query per cercare tra lo storico delle release di TNTVillage, ([che ha chiuso il 30 "
                      "Agosto 2019](http://forum.tntvillage.scambioetico.org/)), io cercherò di darti l'indirizzo al "
-                     "thread ed al backup di esso su https://web.archive.org/")
+                     "thread ed al backup di esso su https://web.archive.org/"
+                     "\n\n"
+                     "/help per alcune info utili")
+
+    HELP_MESSAGE = ("Alcuni suggerimenti:\n\n"
+                    "• <code>%</code> e <code>_</code> sono caratteri speciali per la ricerca. Puoi usare "
+                    "<code>%</code> per matchare zero o più caratteri qualsiasi, e <code>_</code> per matchare "
+                    "esattamente un carattere qualsiasi. Ad esempio, la query \"<i>notte%leoni</i>\" restituirà tutti"
+                    "i torrent che contengono zero o più caratteri qualsiasi tra le parole "
+                    "\"<i>notte</i>\" e \"<i>leoni</i>\"\n"
+                    "• se sei da mobile, ti basta toccare/tenere premuto sul link magnet per copiarlo negli appunti"
+                    "\n\n"
+                    "<a href=\"https://github.com/zeroone2numeral2/tnt-village-bot\">codice sorgente</a>")
     
     RELEASES_EMPTY = "Mi dispiace, non sono riuscito a trovare nulla :("
     

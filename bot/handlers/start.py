@@ -21,7 +21,7 @@ logger = logging.getLogger(__name__)
 def on_help_command(update: Update, _):
     logger.info('%d: /help', update.effective_user.id)
 
-    update.message.reply_markdown(Strings.START_MESSAGE, disable_web_page_preview=True)
+    update.message.reply_html(Strings.HELP_MESSAGE, disable_web_page_preview=True)
 
 
 @decorators.action(ChatAction.TYPING)
