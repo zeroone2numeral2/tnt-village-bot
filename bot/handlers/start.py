@@ -1,7 +1,7 @@
 import logging
 
 # noinspection PyPackageRequirements
-from telegram.ext import  CommandHandler
+from telegram.ext import CommandHandler
 # noinspection PyPackageRequirements
 from telegram import (
     ChatAction,

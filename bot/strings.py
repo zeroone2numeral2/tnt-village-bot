@@ -4,7 +4,7 @@ class Strings:
                      "Agosto 2019](http://forum.tntvillage.scambioetico.org/)), io cercherò di darti l'indirizzo al "
                      "thread ed al backup di esso su https://web.archive.org/"
                      "\n\n"
-                     "/help per alcune info utili")
+                     "/help per alcune info utili, /disclaimer per il disclaimer")
 
     HELP_MESSAGE = ("Alcuni suggerimenti:\n\n"
                     "• <code>%</code> e <code>_</code> sono caratteri speciali per la ricerca. Puoi usare "
@@ -32,5 +32,12 @@ class Strings:
                "<b>Categoria:</b> {categoria}\n"
                "<b>Magnet:</b> <code>{magnet}</code>\n\n"
                "Usa /fatto quando hai terminato la ricerca o per rimuovere la tastiera")
+
+    DISCLAIMER = ("<b>Disclaimer:</b>\n"
+                  "Al momento questo bot è solo un mirror navigabile per l'archivio pubblicato dal "
+                  "sito http://tntvillage.scambioetico.org. Noi non ospitiamo alcun file che violi il diritto "
+                  "d'autore, pubblichiamo solo informazioni non verificate e qualsiasi utilizzo di questi dati è "
+                  "fatto a proprio rischio. Riteniamo fondamentale un compromesso tra il rispetto del diritto d'autore "
+                  "e il rispetto del diritto alla diffusione dell'arte e della conoscenza.")
     
     CANCEL = "Ok, apposto così"
