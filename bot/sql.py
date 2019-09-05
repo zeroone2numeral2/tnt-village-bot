@@ -14,7 +14,11 @@ CREATE_TABLE_RELEASES = """CREATE TABLE IF NOT EXISTS releases (
 
 SELECT_RELEASE = """SELECT *
 FROM releases
-WHERE titolo LIKE ? OR descrizione like ?
+WHERE id IN
+    (SELECT id
+     FROM releases_fts
+     WHERE titolo MATCH ? OR descrizione MATCH ?
+     LIMIT 80)
 ORDER BY titolo;"""
 
 SELECT_RELEASE_ID = """SELECT *
