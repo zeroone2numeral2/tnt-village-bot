@@ -7,11 +7,9 @@ class Strings:
                      "/help per alcune info utili, /disclaimer per il disclaimer")
 
     HELP_MESSAGE = ("Alcuni suggerimenti:\n\n"
-                    "• <code>%</code> e <code>_</code> sono caratteri speciali per la ricerca. Puoi usare "
-                    "<code>%</code> per matchare zero o più caratteri qualsiasi, e <code>_</code> per matchare "
-                    "esattamente un carattere qualsiasi. Ad esempio, la query \"<i>notte%leoni</i>\" restituirà tutti"
-                    "i torrent che contengono zero o più caratteri qualsiasi tra le parole "
-                    "\"<i>notte</i>\" e \"<i>leoni</i>\"\n"
+                    "• la ricerca è case-insensitive (le maiuscole non importano) e puoi specificare anche solo delle "
+                    "parole chiave per la ricerca, per esempio <code>notte leoni</code> troverà anche <code>Una Notte "
+                    "da Leoni</code>.\n"
                     "• se sei da mobile, ti basta toccare/tenere premuto sul link magnet per copiarlo negli appunti"
                     "\n\n"
                     "<a href=\"https://github.com/zeroone2numeral2/tnt-village-bot\">codice sorgente</a>")

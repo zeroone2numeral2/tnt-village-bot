@@ -71,7 +71,6 @@ class Database(ssw.Database):
 
     def search(self, query, **kwargs):
         query = query.strip('%')
-        query = '%{}%'.format(query)
     
         return self._execute(sql.SELECT_RELEASE, (query, query), fetchall=True, **kwargs)
     

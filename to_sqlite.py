@@ -4,7 +4,8 @@ import csv
 from config import config
 
 
-SQL_CREATE = """CREATE TABLE IF NOT EXISTS releases (
+SQL_CREATE = """
+CREATE TABLE IF NOT EXISTS releases (
     id INTEGER PRIMARY KEY,
     data TEXT,
     hash TEXT,
@@ -15,8 +16,10 @@ SQL_CREATE = """CREATE TABLE IF NOT EXISTS releases (
     descrizione TEXT,
     dimensione INT,
     categoria INT
-    
-);"""
+);
+CREATE VIRTUAL TABLE IF NOT EXISTS releases_fts
+USING fts4(id, titolo, descrizione);
+"""
 
 SQL_INSERT = """INSERT OR IGNORE INTO releases (
     data,
@@ -30,12 +33,14 @@ SQL_INSERT = """INSERT OR IGNORE INTO releases (
     categoria
 ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);"""
 
+FTS_INSERT = """INSERT INTO releases_fts (id, titolo, descrizione)
+SELECT id, titolo, descrizione FROM releases;"""
 
 def main():
     connection = sqlite3.connect(config.sqlite.filename)
     cursor = connection.cursor()
     
-    cursor.execute(SQL_CREATE)
+    cursor.executescript(SQL_CREATE)
     connection.commit()
     
     with open('dump_release_tntvillage_2019-08-30.csv', encoding='utf8') as csvfile:
@@ -49,6 +54,8 @@ def main():
             row[0] = row[0].replace('T', ' ')
             
             cursor.execute(SQL_INSERT, tuple(row))
+    # build the full-text-search table
+    cursor.execute(FTS_INSERT)
     
     connection.commit()
 
