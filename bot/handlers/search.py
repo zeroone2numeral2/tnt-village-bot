@@ -29,13 +29,13 @@ def search_release(update: Update, status_to_return_on_invalid_query=Conversatio
         update.message.reply_text(Strings.RELEASE_TOO_SHORT)
         return status_to_return_on_invalid_query
 
-    releases = db.search(update.message.text, as_dict=True)[:64]
+    releases = db.search(update.message.text)[:64]
     if not releases:
         update.message.reply_text(Strings.RELEASES_EMPTY, reply_markup=Keyboard.HIDE, quote=True)
 
         return status_to_return_on_invalid_query
     else:
-        markup = Keyboard.from_list(['{id}. {titolo}'.format(**release) for release in releases])
+        markup = Keyboard.from_list(['{id}. {titolo} • {dimensione_no_decimal} {descrizione}'.format(**release) for release in releases])
         update.message.reply_text(Strings.SELECT_RELEASE, reply_markup=markup)
 
         return WAITING_RELEASE

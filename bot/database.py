@@ -41,10 +41,14 @@ CATEGORIE = {
 }
 
 DICT_FORMATTING = {
-    'titolo': lambda release: utils.escape(release['titolo']),
-    'descrizione': lambda release: utils.escape(release['descrizione']),
+    'titolo': lambda release: release['titolo'],
+    'titolo_escaped': lambda release: utils.escape(release['titolo']),
+    'descrizione': lambda release: release['descrizione'],
+    'descrizione_escaped': lambda release: utils.escape(release['descrizione']),
     'dimensione': lambda release: utils.human_readable_size(release['dimensione']),
-    'autore': lambda release: utils.html_escape(release['autore']),
+    'dimensione_no_decimal': lambda release: utils.human_readable_size(release['dimensione'], precision=0),
+    'autore': lambda release: release['autore'],
+    'autore_escaped': lambda release: utils.html_escape(release['autore']),
     'categoria': lambda release: CATEGORIE[release['categoria']],
     'magnet': lambda release: 'magnet:?xt=urn:btih:{}'.format(release['hash']),
     'forum_url': lambda release: 'http://forum.tntvillage.scambioetico.org/index.php?showtopic={}'.format(release['topic']),
@@ -69,17 +73,16 @@ class Database(ssw.Database):
 
         self._execute(sql.CREATE_TABLE_RELEASES)
 
-    def search(self, query, **kwargs):
+    def search(self, query):
         query = query.strip('%')
     
-        return self._execute(sql.SELECT_RELEASE, (query, query), fetchall=True, **kwargs)
+        releases = self._execute(sql.SELECT_RELEASE, (query, query), fetchall=True, as_dict=True)
+
+        return [{k: DICT_FORMATTING.get(k, lambda x: x[k])(release) for k, v in DICT_FORMATTING.items()} for release in releases]
     
-    def release_by_id(self, release_id, format_release=True):
+    def release_by_id(self, release_id):
         release_id = int(release_id)
         
         release = self._execute(sql.SELECT_RELEASE_ID, (release_id,), fetchone=True, as_dict=True)
 
-        if not format_release:
-            return release
-        else:
-            return {k: DICT_FORMATTING.get(k, lambda x: x[k])(release) for k, v in DICT_FORMATTING.items()}
+        return {k: DICT_FORMATTING.get(k, lambda x: x[k])(release) for k, v in DICT_FORMATTING.items()}

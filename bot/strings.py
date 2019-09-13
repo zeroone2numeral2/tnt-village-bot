@@ -23,10 +23,10 @@ class Strings:
 
     SELECT_RELEASE_INVALID = "Selezione non valida. Seleziona una release valida dalla tastiera, oppure /annulla"
     
-    RELEASE = ("<b>{titolo}</b>\n"
-               "<code>{descrizione}</code>\n\n"
+    RELEASE = ("<b>{titolo_escaped}</b>\n"
+               "<code>{descrizione_escaped}</code>\n\n"
                "<b>Dimensione:</b> {dimensione}\n"
-               "<b>Caricato il:</b> {data} da {autore}\n"
+               "<b>Caricato il:</b> {data} da {autore_escaped}\n"
                "<b>Categoria:</b> {categoria}\n"
                "<b>Magnet:</b> <code>{magnet}</code>\n\n"
                "Usa /fatto quando hai terminato la ricerca o per rimuovere la tastiera")
