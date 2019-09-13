@@ -1,10 +1,12 @@
+import os
+
 from .utils import utils
 from .bot import TorrentsBot
 from .database import Database
 from config import config
 
 
-torrentsbot = TorrentsBot(token=config.telegram.token, use_context=True)
+torrentsbot = TorrentsBot(token=os.environ.get('TELEGRAM_TOKEN', None) or config.telegram.token, use_context=True)
 db = Database(config.sqlite.filename)
 
 
