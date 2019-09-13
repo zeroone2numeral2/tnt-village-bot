@@ -7,11 +7,12 @@ class Strings:
                      "/help per alcune info utili, /disclaimer per il disclaimer")
 
     HELP_MESSAGE = ("Alcuni suggerimenti:\n\n"
-                    "• la ricerca è case-insensitive (le maiuscole non importano) e puoi specificare anche solo delle "
-                    "parole chiave per la ricerca, per esempio <code>notte leoni</code> troverà anche <code>Una Notte "
-                    "da Leoni</code>.\n"
-                    "• se sei da mobile, ti basta toccare/tenere premuto sul link magnet per copiarlo negli appunti"
-                    "\n\n"
+                    "• la ricerca è case-insensitive (non fa differenza tra maiuscole e minuscole) e puoi specificare "
+                    "anche solo delle parole chiave per la ricerca, per esempio "
+                    "<code>\"notte leoni\"</code> troverà anche <code>\"Una Notte da Leoni\"</code>.\n"
+                    "• se sei da mobile, ti basta toccare/tenere premuto sul link magnet per copiarlo negli appunti\n"
+                    "• questo bot <b>non è ufficiale</b>\n"
+                    "\n"
                     "<a href=\"https://github.com/zeroone2numeral2/tnt-village-bot\">codice sorgente</a>")
     
     RELEASES_EMPTY = "Mi dispiace, non sono riuscito a trovare nulla :("
