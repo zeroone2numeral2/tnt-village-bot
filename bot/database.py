@@ -62,7 +62,7 @@ DICT_FORMATTING = {
 
 class Database(ssw.Database):
     def __init__(self, filename):
-        logger.debug('initing Database module')
+        logger.debug('initializing Database module')
 
         ssw.Database.__init__(self, filename)
 
