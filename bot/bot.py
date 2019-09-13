@@ -82,7 +82,7 @@ class TorrentsBot(Updater):
             importlib.import_module(import_path)
 
     def run(self, *args, **kwargs):
-        logger.info('running as @%s', self.bot.username)
+        logger.warning('running as @%s', self.bot.username)
         self.start_polling(*args, **kwargs)
         self.idle()
 
