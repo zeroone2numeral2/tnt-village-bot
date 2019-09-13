@@ -32,12 +32,6 @@
         "JobQueue": {
             "level": "WARNING"
         },
-        "peewee": {
-            "level": "WARNING"
-        },
-        "PIL": {
-            "level": "WARNING"
-        },
         "bot.bot": {
             "level": "INFO"
         }
