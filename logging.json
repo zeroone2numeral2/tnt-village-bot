@@ -10,11 +10,11 @@
         "file": {
             "class": "logging.handlers.RotatingFileHandler",
             "formatter": "standard",
-            "level": "DEBUG",
+            "level": "WARNING",
             "encoding": "utf8",
             "maxBytes": 1048576,
             "filename": "logs/torrentsbot.log",
-            "backupCount": 500
+            "backupCount": 10
         }
     },
     "loggers": {
