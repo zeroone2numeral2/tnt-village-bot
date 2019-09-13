@@ -42,7 +42,6 @@ def search_release(update: Update, status_to_return_on_invalid_query=Conversatio
 
 
 @decorators.action(ChatAction.TYPING)
-@decorators.restricted
 @decorators.failwithmessage
 def on_search_query(update: Update, _):
     logger.info('%d: search query', update.effective_user.id)

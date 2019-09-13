@@ -13,7 +13,6 @@ logger = logging.getLogger(__name__)
 
 
 @decorators.action(ChatAction.TYPING)
-@decorators.restricted
 @decorators.failwithmessage
 def cancel_command(update: Update, _):
     logger.info('%s command', update.message.text)

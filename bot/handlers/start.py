@@ -16,7 +16,6 @@ logger = logging.getLogger(__name__)
 
 
 @decorators.action(ChatAction.TYPING)
-@decorators.restricted
 @decorators.failwithmessage
 def on_help_command(update: Update, _):
     logger.info('%d: /help', update.effective_user.id)
@@ -25,7 +24,6 @@ def on_help_command(update: Update, _):
 
 
 @decorators.action(ChatAction.TYPING)
-@decorators.restricted
 @decorators.failwithmessage
 def on_start_command(update: Update, _):
     logger.info('%d: /start', update.effective_user.id)

@@ -16,7 +16,6 @@ logger = logging.getLogger(__name__)
 
 
 @decorators.action(ChatAction.TYPING)
-@decorators.restricted
 @decorators.failwithmessage
 def on_disclaimer_command(update: Update, _):
     logger.info('%d: /disclaimer', update.effective_user.id)

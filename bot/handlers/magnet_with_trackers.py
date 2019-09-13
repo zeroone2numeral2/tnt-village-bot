@@ -33,7 +33,6 @@ TRACKERS = (
 MAGNET_TEXT = """<code>magnet:?xt=urn:btih:{hash}&tr={trackers_list}</code>"""
 
 
-@decorators.restricted
 @decorators.failwithmessage
 def on_expand_magnet_button(update: Update, context: CallbackContext):
     logger.info('%d: magnet with trackers button', update.effective_user.id)
@@ -51,7 +50,6 @@ def on_expand_magnet_button(update: Update, context: CallbackContext):
     update.callback_query.answer(Strings.CB_ANSWER_TRACKERS)
 
 
-@decorators.restricted
 @decorators.failwithmessage
 def on_collapse_button(update: Update, context: CallbackContext):
     logger.info('%d: collapse button', update.effective_user.id)
