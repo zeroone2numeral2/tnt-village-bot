@@ -75,8 +75,11 @@ class Database(ssw.Database):
         self._execute(sql.CREATE_TABLE_RELEASES)
         self._execute(sql.CREATE_TABLE_RELEASES_FTS)
 
-    def search(self, query):
+    def search(self, query, allow_truncated_searches=True):
         query = query.strip('%')
+        if allow_truncated_searches:
+            # allow to search truncated queries too (see #2)
+            query = '*{}*'.format(query)
     
         releases = self._execute(sql.SELECT_RELEASE, (query, query), fetchall=True, as_dict=True)
 
