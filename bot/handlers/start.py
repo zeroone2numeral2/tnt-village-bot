@@ -17,6 +17,7 @@ from telegram import (
 from bot import torrentsbot
 from bot import db
 from bot.markups import Keyboard
+from bot.markups import InlineKeyboard
 from bot.utils import decorators
 from bot.strings import Strings
 
