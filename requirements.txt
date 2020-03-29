@@ -1,4 +1,4 @@
-python-telegram-bot==12.0.0
+python-telegram-bot==12.5
 simplesqlitewrap==0.1.14
 toml
 feedparser
