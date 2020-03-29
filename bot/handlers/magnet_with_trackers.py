@@ -38,7 +38,7 @@ def on_expand_magnet_button(update: Update, context: CallbackContext):
     logger.info('%d: magnet with trackers button', update.effective_user.id)
 
     release_id = context.match[1]
-    release = db.release_by_id(release_id, raw=True)
+    release = db.get_release(release_id, raw=True)
 
     # if available, use the magnet we fetched from the forum page. Otherwise build it from the hash
     if not release['magnet'] and not release['hash'] and release['torrent_url']:
@@ -66,7 +66,7 @@ def on_collapse_button(update: Update, context: CallbackContext):
     logger.info('%d: collapse button', update.effective_user.id)
 
     release_id = context.match[1]
-    release = db.release_by_id(release_id)
+    release = db.get_release(release_id)
 
     update.callback_query.edit_message_text(
         Strings.RELEASE.format(**release),

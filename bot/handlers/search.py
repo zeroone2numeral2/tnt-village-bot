@@ -60,7 +60,7 @@ def on_release_selected(update: Update, _):
         return search_release(update, WAITING_RELEASE)
     
     release_id = release_match.group(1)
-    release = db.release_by_id(release_id)
+    release = db.get_release(release_id)
     
     release_string = Strings.RELEASE.format(**release)
     
@@ -72,7 +72,7 @@ def on_release_selected(update: Update, _):
 
 torrentsbot.add_handler(ConversationHandler(
     name='searching_releases',
-    entry_points=[MessageHandler(Filters.text, on_search_query)],
+    entry_points=[MessageHandler(Filters.text & ~Filters.command, on_search_query)],
     states={
         WAITING_RELEASE: [MessageHandler(Filters.text, on_release_selected)]
     },
