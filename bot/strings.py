@@ -54,3 +54,5 @@ class Strings:
     CHANNEL_NOTIFICATION_TEMPLATE = ("<b>Nuova release</b>: {titolo} ({categoria_pretty})\n"
                                      "<code>{descrizione}</code>\n\n"
                                      "<b>File torrent:</b> {torrent_url}")
+
+    UNKNOWN_COMMAND = "Comando sconosciuto"
