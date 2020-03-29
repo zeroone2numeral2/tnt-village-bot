@@ -49,6 +49,7 @@ class Torrent:
         self.magnet = None
         self.magnet_short = None
         self.other_urls = list()
+        self.deeplink = 'https://t.me/{}?start={}'.format(torrentsbot.bot.username, self.topic)
 
         match = re.search(r'(.*)\s\[(.*)\]$', entry.title, re.I)
         self.titolo = match.group(1).strip()
