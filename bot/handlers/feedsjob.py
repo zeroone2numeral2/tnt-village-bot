@@ -16,6 +16,7 @@ from telegram.ext import CallbackContext
 from bot import torrentsbot
 from bot import db
 from bot.categories import CATEGORIE
+from bot.markups import InlineKeyboard
 from bot.utils import utils
 from bot.utils import decorators
 from bot.strings import Strings
@@ -193,7 +194,8 @@ def post_to_channel(bot: Bot, torrents: [Torrent]):
                 text,
                 parse_mode=ParseMode.HTML,
                 disable_notification=True,
-                disable_web_page_preview=True
+                disable_web_page_preview=True,
+                reply_markup=InlineKeyboard.release_deeplink(torrent.deeplink)
             )
         except (BadRequest, TelegramError) as e:
             logger.error('error while posting message to channel: %s', e.message)
