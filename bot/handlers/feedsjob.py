@@ -28,8 +28,9 @@ FEED_URL = 'http://tntvillage.scambioetico.org/rss.php?c=0&p=10'
 
 
 class Torrent:
-    __SLOTHS__ = ['data', 'hash', 'topic', 'post', 'autore', 'titolo', 'descrizione', 'categoria', 'title_full',
-                  'published', 'published_parsed', 'magnet', 'magnet_short', 'other_urls', 'torrent_url']
+    __slots__ = ['data', 'hash', 'topic', 'post', 'autore', 'titolo', 'descrizione', 'categoria', 'title_full',
+                 'published', 'published_parsed', 'magnet', 'magnet_short', 'other_urls', 'torrent_url', 'deeplink',
+                 'dimensione', 'forum_url']
 
     def __init__(self, entry):
         # così come erano ordinati nel csv
@@ -50,7 +51,6 @@ class Torrent:
         self.magnet = None
         self.magnet_short = None
         self.other_urls = list()
-        self.deeplink = 'https://t.me/{}?start={}'.format(torrentsbot.bot.username, self.topic)
 
         match = re.search(r'(.*)\s\[(.*)\]$', entry.title, re.I)
         self.titolo = match.group(1).strip()
@@ -65,6 +65,8 @@ class Torrent:
                 self.post = int(re.search(r'id=(\d+)$', link['href']).group(1))
             else:
                 self.other_urls.append(link['href'])
+
+        self.deeplink = 'https://t.me/{}?start={}'.format(torrentsbot.bot.username, self.topic)
 
     @property
     def dimensione_pretty(self):
@@ -109,12 +111,12 @@ class Torrent:
     def format_dict(self):
         ignored_properties = ('other_urls',)
         virtual_properties = ['dimensione_pretty', 'categoria_pretty']
-        return {k: getattr(self, k) for k in self.__SLOTHS__ + virtual_properties if k not in ignored_properties}
+        return {k: getattr(self, k) for k in self.__slots__ + virtual_properties if k not in ignored_properties}
 
     def __repr__(self):
         base_string = 'Torrent({})'
         properties = list()
-        for key in self.__SLOTHS__:
+        for key in self.__slots__:
             properties.append('{}: {}'.format(key, getattr(self, key)))
 
         return base_string.format(', '.join(properties))
@@ -239,7 +241,8 @@ def feeds_job(context: CallbackContext):
             logger.warning('WARNING! We haven\'t been able to fetch a magnet for this torrent')
 
     if new_torrents:
-        logger.info("%d new torrents to insert, %d of them don't have a magnet", len(new_torrents), len([t for t in new_torrents if not t.magnet]))
+        logger.info("%d new torrents to insert, %d of them don't have a magnet", len(new_torrents),
+                    len([t for t in new_torrents if not t.magnet]))
         with threading.Lock():
             db.insert_torrents(new_torrents)
 
@@ -251,4 +254,4 @@ def feeds_job(context: CallbackContext):
     logger.info('job executed in %s seconds', time.time() - start_time)
 
 
-torrentsbot.register_job(feeds_job, interval=config.feedsjob.interval*60, first=config.feedsjob.first*60)
+torrentsbot.register_job(feeds_job, interval=config.feedsjob.interval * 60, first=config.feedsjob.first * 60)
