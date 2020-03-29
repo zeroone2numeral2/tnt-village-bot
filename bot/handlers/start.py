@@ -1,6 +1,8 @@
 import logging
 
 # noinspection PyPackageRequirements
+import re
+
 from telegram.ext import (
     CommandHandler,
     MessageHandler,
@@ -52,6 +54,7 @@ def on_start_deeplink(update: Update, context: CallbackContext):
     release = db.get_release(topic, search_by='topic')
 
     release_string = Strings.RELEASE.format(**release)
+    release_string = re.sub('.*(Usa /fatto.*)$', '', release_string)  # remove the last line, shouldn't show with deeplinks
 
     reply_markup = InlineKeyboard.release_info(release['id'], release['webarchive_url'])
     update.message.reply_html(release_string, disable_web_page_preview=True, reply_markup=reply_markup)
