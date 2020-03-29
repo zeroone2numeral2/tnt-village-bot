@@ -32,6 +32,7 @@ def failwithmessage(func):
             return func(update, context, *args, **kwargs)
         except TimedOut:
             logger.error('TimedOut error')
+            # memo: timed out errors break conversation handlers because the new state isn't returned
         except Exception as e:
             logger.error('unexpected error while running handler callback: %s', str(e), exc_info=True)
             text = 'An error occurred while processing the message: <code>{}</code>'.format(html_escape(str(e)))
