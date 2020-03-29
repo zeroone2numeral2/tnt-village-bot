@@ -1,6 +1,4 @@
 import logging
-
-# noinspection PyPackageRequirements
 import re
 
 from telegram.ext import (
