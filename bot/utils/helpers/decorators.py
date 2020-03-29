@@ -5,6 +5,7 @@ from html import escape as html_escape
 # noinspection PyPackageRequirements
 from telegram import Update, ParseMode
 # noinspection PyPackageRequirements
+from telegram.error import TimedOut
 from telegram.ext import CallbackContext
 
 from config import config
@@ -29,6 +30,8 @@ def failwithmessage(func):
     def wrapped(update: Update, context: CallbackContext, *args, **kwargs):
         try:
             return func(update, context, *args, **kwargs)
+        except TimedOut:
+            logger.error('TimedOut error')
         except Exception as e:
             logger.error('unexpected error while running handler callback: %s', str(e), exc_info=True)
             text = 'An error occurred while processing the message: <code>{}</code>'.format(html_escape(str(e)))
