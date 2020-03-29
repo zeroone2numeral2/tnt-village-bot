@@ -5,7 +5,8 @@ from telegram.ext import (
     CommandHandler,
     MessageHandler,
     Filters,
-    CallbackContext
+    CallbackContext,
+    ConversationHandler
 )
 # noinspection PyPackageRequirements
 from telegram import (
@@ -15,7 +16,7 @@ from telegram import (
 
 from bot import torrentsbot
 from bot import db
-from bot.markups import InlineKeyboard
+from bot.markups import Keyboard
 from bot.utils import decorators
 from bot.strings import Strings
 
@@ -35,7 +36,9 @@ def on_help_command(update: Update, _):
 def on_start_command(update: Update, _):
     logger.info('%d: /start', update.effective_user.id)
 
-    update.message.reply_markdown(Strings.START_MESSAGE, disable_web_page_preview=True)
+    update.message.reply_markdown(Strings.START_MESSAGE, disable_web_page_preview=True, reply_markup=Keyboard.HIDE)
+
+    return ConversationHandler.END
 
 
 @decorators.action(ChatAction.TYPING)
