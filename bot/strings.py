@@ -29,7 +29,8 @@ class Strings:
                "<b>Dimensione:</b> {dimensione}\n"
                "<b>Caricato il:</b> {data} da {autore_escaped}\n"
                "<b>Categoria:</b> {categoria}\n"
-               "<b>Magnet:</b> <code>{magnet}</code>\n\n"
+               "<b>Magnet:</b> <code>{magnet}</code>\n"
+               "<b>File torrent:</b> {torrent_url}\n\n"
                "Usa /fatto quando hai terminato la ricerca o per rimuovere la tastiera")
 
     DISCLAIMER = ("<b>Disclaimer:</b>\n"
@@ -44,3 +45,8 @@ class Strings:
     CB_ANSWER_TRACKERS = "Ecco il magnet coi trackers"
 
     CB_ANSWER_COLLAPSED = "Informazioni sulla release"
+
+    TORRENT_URL_NO_MAGNET = ("Non ho a disposizione il magnet di questa release, ma puoi scaricare "
+                             "il file torrent <a href=\"{torrent_url}\">da qui</a>")
+
+    MAGNET_NOT_AVAILABLE = "Mi dispiace, non ho il magnet di questo torrent :("

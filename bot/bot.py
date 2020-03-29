@@ -94,3 +94,8 @@ class TorrentsBot(Updater):
             logger.info('adding handler: %s', args[0].callback.__name__)
 
         self.dispatcher.add_handler(*args, **kwargs)
+
+    def register_job(self, *args, **kwargs):
+        logger.info('registering job: %s', args[0].__name__)
+
+        self.job_queue.run_repeating(*args, **kwargs)

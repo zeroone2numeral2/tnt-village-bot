@@ -75,3 +75,4 @@ dump_release_tntvillage_2019-08-30.csv
 *.db
 *.csv
 config.toml
+incremental_releases.csv

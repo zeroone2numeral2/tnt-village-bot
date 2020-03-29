@@ -35,7 +35,7 @@ def search_release(update: Update, status_to_return_on_invalid_query=Conversatio
 
         return status_to_return_on_invalid_query
     else:
-        markup = Keyboard.from_list(['{id}. {titolo} • {dimensione_no_decimal} {descrizione}'.format(**release) for release in releases])
+        markup = Keyboard.from_list(['{id}. {titolo} • {dimensione_no_decimal} [{descrizione}]'.format(**release) for release in releases])
         update.message.reply_text(Strings.SELECT_RELEASE, reply_markup=markup)
 
         return WAITING_RELEASE

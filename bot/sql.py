@@ -8,9 +8,15 @@ CREATE_TABLE_RELEASES = """CREATE TABLE IF NOT EXISTS releases (
     titolo TEXT,
     descrizione TEXT,
     dimensione INT,
-    categoria INT
+    categoria INT,
 
+    -- custom
+    magnet TEXT,
+    torrent_url TEXT
 );"""
+
+CREATE_TABLE_RELEASES_FTS = """CREATE VIRTUAL TABLE IF NOT EXISTS releases_fts
+USING fts4(id, titolo, descrizione);"""
 
 SELECT_RELEASE = """SELECT *
 FROM releases
@@ -21,6 +27,23 @@ WHERE id IN
      LIMIT 80)
 ORDER BY titolo;"""
 
-SELECT_RELEASE_ID = """SELECT *
+SELECT_GENERIC = """SELECT *
 FROM releases
-WHERE id = ?;"""
+WHERE {} = ?;"""
+
+INSERT_TORRENTS = """INSERT OR IGNORE INTO releases (
+    data,
+    hash,
+    topic,
+    post,
+    autore,
+    titolo,
+    descrizione,
+    dimensione,
+    categoria,
+    hash,
+    torrent_url
+) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);"""
+
+INSERT_TORRENTS_FTS = """INSERT INTO releases_fts (id, titolo, descrizione)
+SELECT id, titolo, descrizione FROM releases WHERE topic = ?;"""

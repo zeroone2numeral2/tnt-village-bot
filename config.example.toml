@@ -2,6 +2,11 @@
 token = "123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11"
 admins = [1234567]
 admins_only = false
+unexpected_exceptions_notifications = -1001141547703 # the chat where to send unexpected errors notifications
 
 [sqlite]
 filename = "releases.sqlite"
+
+[feedsjob]
+first = 60 # how much to wait from startup to execute the job for the first time (in minutes)
+interval = 180 # job's frequency (in minutes)
