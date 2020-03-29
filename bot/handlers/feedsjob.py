@@ -9,11 +9,16 @@ from pprint import pprint
 import feedparser
 import requests
 from bs4 import BeautifulSoup
+from telegram import Bot, ParseMode
+from telegram.error import BadRequest, TelegramError
 from telegram.ext import CallbackContext
 
 from bot import torrentsbot
 from bot import db
+from bot.categories import CATEGORIE
+from bot.utils import utils
 from bot.utils import decorators
+from bot.strings import Strings
 from config import config
 
 logger = logging.getLogger(__name__)
@@ -22,8 +27,8 @@ FEED_URL = 'http://tntvillage.scambioetico.org/rss.php?c=0&p=10'
 
 
 class Torrent:
-    __sloths__ = ['data', 'hash', 'topic', 'post', 'autore', 'titolo', 'descrizione', 'categoria', 'title_full',
-                  'published', 'published_parsed', 'magnet', 'other_urls']
+    __SLOTHS__ = ['data', 'hash', 'topic', 'post', 'autore', 'titolo', 'descrizione', 'categoria', 'title_full',
+                  'published', 'published_parsed', 'magnet', 'magnet_short', 'other_urls', 'torrent_url']
 
     def __init__(self, entry):
         # così come erano ordinati nel csv
@@ -42,6 +47,7 @@ class Torrent:
         self.published = entry.published
         self.published_parsed = entry.published_parsed
         self.magnet = None
+        self.magnet_short = None
         self.other_urls = list()
 
         match = re.search(r'(.*)\s\[(.*)\]$', entry.title, re.I)
@@ -58,9 +64,24 @@ class Torrent:
             else:
                 self.other_urls.append(link['href'])
 
+    @property
+    def dimensione_pretty(self):
+        if not self.dimensione:
+            return '? bytes'
+
+        return utils.human_readable_size(self.dimensione)
+
+    @property
+    def categoria_pretty(self):
+        if not self.categoria:
+            return 'sconosciuta'
+
+        return CATEGORIE[self.categoria]
+
     def set_magnet(self, magnet_url):
         self.magnet = magnet_url
         self.hash = re.search(r'magnet:\?xt=urn:btih:(\w+)&', self.magnet, re.I).group(1)
+        self.magnet_short = 'magnet:?xt=urn:btih:{}'.format(self.hash)
 
     def db_tuple(self, magnet=True, torrent_url=True):
         result_list = [
@@ -83,10 +104,15 @@ class Torrent:
 
         return tuple(result_list)
 
+    def format_dict(self):
+        ignored_properties = ('other_urls',)
+        virtual_properties = ['dimensione_pretty', 'categoria_pretty']
+        return {k: getattr(self, k) for k in self.__SLOTHS__ + virtual_properties if k not in ignored_properties}
+
     def __repr__(self):
         base_string = 'Torrent({})'
         properties = list()
-        for key in self.__sloths__:
+        for key in self.__SLOTHS__:
             properties.append('{}: {}'.format(key, getattr(self, key)))
 
         return base_string.format(', '.join(properties))
@@ -152,6 +178,28 @@ def write_to_csv(torrents):
     logger.info('completed')
 
 
+def post_to_channel(bot: Bot, torrents: [Torrent]):
+    if not config.feedsjob.get('new_torrents_notifications', None):
+        logger.info('new releases notifications are disabled')
+        return
+
+    for torrent in torrents:
+        logger.info('posting to channel topic %d...', torrent.topic)
+        text = Strings.CHANNEL_NOTIFICATION_TEMPLATE.format(**torrent.format_dict())
+        try:
+            bot.send_message(
+                config.feedsjob.new_torrents_notifications,
+                text,
+                parse_mode=ParseMode.HTML,
+                disable_notification=True,
+                disable_web_page_preview=True
+            )
+        except (BadRequest, TelegramError) as e:
+            logger.error('error while posting message to channel: %s', e.message)
+
+        time.sleep(3)
+
+
 @decorators.failwithmessage_job
 def feeds_job(context: CallbackContext):
     logger.info('starting job')
@@ -193,6 +241,7 @@ def feeds_job(context: CallbackContext):
             db.insert_torrents(new_torrents)
 
         write_to_csv(new_torrents)
+        post_to_channel(context.bot, new_torrents)
     else:
         logger.info('no new torrents to insert')
 

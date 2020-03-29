@@ -50,3 +50,7 @@ class Strings:
                              "il file torrent <a href=\"{torrent_url}\">da qui</a>")
 
     MAGNET_NOT_AVAILABLE = "Mi dispiace, non ho il magnet di questo torrent :("
+
+    CHANNEL_NOTIFICATION_TEMPLATE = ("<b>Nuova release</b>: {titolo} ({categoria_pretty})\n"
+                                     "<code>{descrizione}</code>\n\n"
+                                     "<b>File torrent:</b> {torrent_url}")
