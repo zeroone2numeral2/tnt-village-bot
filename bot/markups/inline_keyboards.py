@@ -18,3 +18,10 @@ class InlineKeyboard:
         return InlineKeyboardMarkup([[
             InlineKeyboardButton('comprimi', callback_data='collapse:{}'.format(release_id))
         ]])
+
+    @staticmethod
+    def release_deeplink(release_deeplink):
+        return InlineKeyboardMarkup([[
+            InlineKeyboardButton('vai al torrent', url=release_deeplink)
+        ]])
+
