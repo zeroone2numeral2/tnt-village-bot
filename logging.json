@@ -15,9 +15,23 @@
             "maxBytes": 1048576,
             "filename": "logs/torrentsbot.log",
             "backupCount": 10
+        },
+        "file_jobs": {
+            "class": "logging.handlers.RotatingFileHandler",
+            "formatter": "jobs",
+            "level": "DEBUG",
+            "encoding": "utf8",
+            "maxBytes": 1048576,
+            "filename": "logs/torrentsbot_feedsjob.log",
+            "backupCount": 20
         }
     },
     "loggers": {
+        "jobs": {
+            "handlers": ["console", "file_jobs"],
+            "propagate": false,
+            "level": "DEBUG"
+        },
         "": {
             "handlers": [
                 "console",
@@ -42,6 +56,9 @@
         },
         "standard": {
             "format": "[%(asctime)s][%(name)s][%(module)s:%(funcName)s:%(lineno)d][%(levelname)s] >>> %(message)s"
+        },
+        "jobs": {
+            "format": "[%(asctime)s][%(levelname)s] >>> %(message)s"
         }
     }
 }

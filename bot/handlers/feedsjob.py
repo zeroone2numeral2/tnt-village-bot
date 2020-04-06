@@ -22,7 +22,7 @@ from bot.utils import decorators
 from bot.strings import Strings
 from config import config
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger('jobs')
 
 FEED_URL = 'http://tntvillage.scambioetico.org/rss.php?c=0&p=10'
 

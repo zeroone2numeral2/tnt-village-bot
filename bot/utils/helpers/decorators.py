@@ -50,7 +50,9 @@ def failwithmessage_job(func):
         try:
             return func(context, *args, **kwargs)
         except Exception as e:
-            logger.error('unexpected error while executing a job: %s', str(e), exc_info=True)
+            jobslogger = logging.getLogger('jobs')
+
+            jobslogger.error('unexpected error while executing a job: %s', str(e), exc_info=True)
             text = 'An error occurred while executing a job: <code>{}</code>'.format(html_escape(str(e)))
             if config.telegram.get('unexpected_exceptions_notifications', None):
                 context.bot.send_message(config.telegram.unexpected_exceptions_notifications, text, parse_mode=ParseMode.HTML)
