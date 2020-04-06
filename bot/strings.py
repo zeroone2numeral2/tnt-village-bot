@@ -51,7 +51,7 @@ class Strings:
 
     MAGNET_NOT_AVAILABLE = "Mi dispiace, non ho il magnet di questo torrent :("
 
-    CHANNEL_NOTIFICATION_TEMPLATE = ("<b>Nuova release</b>: {titolo} ({categoria_pretty})\n"
+    CHANNEL_NOTIFICATION_TEMPLATE = ("<b>Nuova release</b>: {titolo} (#{categoria_tag})\n"
                                      "<code>{descrizione}</code>\n\n"
                                      "<b>File torrent:</b> {torrent_url}")
 

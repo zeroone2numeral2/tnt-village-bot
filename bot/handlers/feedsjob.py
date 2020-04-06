@@ -82,6 +82,10 @@ class Torrent:
 
         return CATEGORIE[self.categoria]
 
+    @property
+    def categoria_tag(self):
+        return self.categoria_pretty.replace(' ', '_').lower()
+
     def set_magnet(self, magnet_url):
         self.magnet = magnet_url
         self.hash = re.search(r'magnet:\?xt=urn:btih:(\w+)&', self.magnet, re.I).group(1)
@@ -110,7 +114,7 @@ class Torrent:
 
     def format_dict(self):
         ignored_properties = ('other_urls',)
-        virtual_properties = ['dimensione_pretty', 'categoria_pretty']
+        virtual_properties = ['dimensione_pretty', 'categoria_pretty', 'categoria_tag']
         return {k: getattr(self, k) for k in self.__slots__ + virtual_properties if k not in ignored_properties}
 
     def __repr__(self):
