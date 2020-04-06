@@ -230,6 +230,7 @@ def post_to_channel(bot: Bot, torrents: [Torrent]):
 
             channel_post.reply_document(
                 document=InputFile(tmpfile, filename='{}.torrent'.format(torrent.topic)),
+                thumb=open('assets/torrent_thumb.jpg', 'rb'),
                 caption=torrent.titolo,
                 disable_notification=True
             )
