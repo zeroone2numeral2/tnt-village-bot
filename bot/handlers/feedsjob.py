@@ -10,7 +10,7 @@ from pprint import pprint
 import feedparser
 import requests
 from bs4 import BeautifulSoup
-from telegram import Bot, ParseMode, Message
+from telegram import Bot, ParseMode, Message, InputFile
 from telegram.error import BadRequest, TelegramError
 from telegram.ext import CallbackContext
 
@@ -228,7 +228,11 @@ def post_to_channel(bot: Bot, torrents: [Torrent]):
             tmpfile.write(result.content)
             tmpfile.seek(0)
 
-            channel_post.reply_document(tmpfile, disable_notification=True, caption=torrent.titolo)
+            channel_post.reply_document(
+                document=InputFile(tmpfile, filename='{}.torrent'.format(torrent.topic)),
+                caption=torrent.titolo,
+                disable_notification=True
+            )
             tmpfile.close()
         except Exception:
             logger.error('exception while downloading/sending the torrent file', exc_info=True)
