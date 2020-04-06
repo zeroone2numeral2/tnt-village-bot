@@ -141,22 +141,25 @@ def entry_to_torrent(entry, fetch_forum_page=True):
         logger.info('torrent %s (topic: %d) already in the db, ignoring...', torrent.titolo, torrent.topic)
         return
 
-    if fetch_forum_page:
-        time.sleep(1)
+    if not fetch_forum_page:
+        return torrent
 
-        try:
-            logger.info('requesting %s...', torrent.forum_url)
+    time.sleep(1)
 
-            start_time = time.time()
-            html_page = request_page(torrent.forum_url)
-            logger.info('request took %s seconds', time.time() - start_time)
-        except Exception as e:
-            logger.error('error while fetching forum page (%s): %s', torrent.forum_url, str(e), exc_info=True)
-            return torrent
+    try:
+        logger.info('requesting %s...', torrent.forum_url)
 
-        soup = BeautifulSoup(html_page, features='html.parser')
+        start_time = time.time()
+        html_page = request_page(torrent.forum_url)
+        logger.info('request took %s seconds', time.time() - start_time)
+    except Exception as e:
+        logger.error('error while fetching forum page (%s): %s', torrent.forum_url, str(e), exc_info=True)
+        return torrent
 
-        links = soup.find_all('a', {'title': 'Magnet link'})
+    soup = BeautifulSoup(html_page, features='html.parser')
+
+    links = soup.find_all('a', {'title': 'Magnet link'})
+    if links:
         torrent.set_magnet(links[0]['href'])
 
         divs = soup.find_all('div')
@@ -168,6 +171,8 @@ def entry_to_torrent(entry, fetch_forum_page=True):
 
                 torrent.dimensione = int(match.group(1).replace(',', ''))
                 break
+    else:
+        logger.warning('no magnet url for url, likely because it requires login (url: %s)', torrent.forum_url)
 
     return torrent
 
