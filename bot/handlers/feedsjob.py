@@ -2,6 +2,7 @@ import datetime
 import logging
 import re
 import csv
+import tempfile
 import time
 import threading
 from pprint import pprint
@@ -9,7 +10,7 @@ from pprint import pprint
 import feedparser
 import requests
 from bs4 import BeautifulSoup
-from telegram import Bot, ParseMode
+from telegram import Bot, ParseMode, Message
 from telegram.error import BadRequest, TelegramError
 from telegram.ext import CallbackContext
 
@@ -25,6 +26,7 @@ from config import config
 logger = logging.getLogger('jobs')
 
 FEED_URL = 'http://tntvillage.scambioetico.org/rss.php?c=0&p=10'
+USER_AGENT = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.47 Safari/537.36'
 
 
 class Torrent:
@@ -127,10 +129,9 @@ class Torrent:
 
 
 def request_page(url):
-    user_agent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.47 Safari/537.36'
     result = requests.get(
         url,
-        headers={'User-Agent': user_agent}
+        headers={'User-Agent': USER_AGENT}
     )
 
     return result.text
@@ -199,8 +200,10 @@ def post_to_channel(bot: Bot, torrents: [Torrent]):
     for torrent in torrents:
         logger.info('posting to channel topic %d...', torrent.topic)
         text = Strings.CHANNEL_NOTIFICATION_TEMPLATE.format(**torrent.format_dict())
+
+        channel_post: [Message, None] = None
         try:
-            bot.send_message(
+            channel_post = bot.send_message(
                 config.feedsjob.new_torrents_notifications,
                 text,
                 parse_mode=ParseMode.HTML,
@@ -210,6 +213,25 @@ def post_to_channel(bot: Bot, torrents: [Torrent]):
             )
         except (BadRequest, TelegramError) as e:
             logger.error('error while posting message to channel: %s', e.message)
+
+        if not config.feedsjob.get('send_torrent_file', True):
+            time.sleep(3)
+            continue
+
+        logger.info('sending torrent file...')
+
+        # noinspection PyBroadException
+        try:
+            result = requests.get(torrent.torrent_url, headers={'User-Agent': USER_AGENT})
+
+            tmpfile = tempfile.TemporaryFile(prefix=str(torrent.topic), suffix='.torrent')
+            tmpfile.write(result.content)
+            tmpfile.seek(0)
+
+            channel_post.reply_document(tmpfile, disable_notification=True, caption=torrent.titolo)
+            tmpfile.close()
+        except Exception:
+            logger.error('exception while downloading/sending the torrent file', exc_info=True)
 
         time.sleep(3)
 
