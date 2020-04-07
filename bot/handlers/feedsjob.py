@@ -1,4 +1,5 @@
 import datetime
+import json
 import logging
 import re
 import csv
@@ -25,7 +26,7 @@ from config import config
 
 logger = logging.getLogger('jobs')
 
-FEED_URL = 'http://tntvillage.scambioetico.org/rss.php?c=0&p=' + config.feedsjob.get('feed_items', 25)
+FEED_URL = 'http://tntvillage.scambioetico.org/rss.php?c=0&p=' + str(config.feedsjob.get('feed_items', 25))
 USER_AGENT = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.47 Safari/537.36'
 
 
@@ -33,6 +34,8 @@ class Torrent:
     __slots__ = ['data', 'hash', 'topic', 'post', 'autore', 'titolo', 'descrizione', 'categoria', 'title_full',
                  'published', 'published_parsed', 'magnet', 'magnet_short', 'other_urls', 'torrent_url', 'deeplink',
                  'dimensione', 'forum_url', 'dimensione_parsed']
+
+    PROPERTIES = ['dimensione_pretty', 'categoria_pretty', 'categoria_tag']
 
     def __init__(self, entry):
         # così come erano ordinati nel csv
@@ -124,8 +127,10 @@ class Torrent:
 
     def format_dict(self):
         ignored_properties = ('other_urls',)
-        virtual_properties = ['dimensione_pretty', 'categoria_pretty', 'categoria_tag']
-        return {k: getattr(self, k) for k in self.__slots__ + virtual_properties if k not in ignored_properties}
+        return {k: getattr(self, k) for k in self.__slots__ + self.PROPERTIES if k not in ignored_properties}
+
+    def to_json(self):
+        return json.dumps(self.format_dict(), indent=4)
 
     def __repr__(self):
         base_string = 'Torrent({})'
