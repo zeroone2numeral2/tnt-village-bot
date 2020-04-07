@@ -65,6 +65,7 @@ class Torrent:
         match = re.search(r'.*Size <b>([\w.\s]+)</b>', entry.description, re.I)
         if match:
             self.dimensione_parsed = match.group(1).lower()
+            self.dimensione = utils.human_readable_to_bytes(*self.dimensione_parsed.split(' '))
 
         for link in entry.links:
             if link['rel'] == 'alternate':
@@ -182,7 +183,9 @@ def entry_to_torrent(entry, fetch_forum_page=True):
     if links:
         torrent.set_magnet(links[0]['href'])
 
+        """
         divs = soup.find_all('div')
+        
         for div in divs:
             if 'Dimensione:' in div.text:
                 match = re.search(r'.*Dimensione: ([\d,]+) bytes.*', div.text, re.I)
@@ -191,6 +194,7 @@ def entry_to_torrent(entry, fetch_forum_page=True):
 
                 torrent.dimensione = int(match.group(1).replace(',', ''))
                 break
+        """
     else:
         logger.warning('no magnet url for url, likely because it requires login (url: %s)', torrent.forum_url)
 
