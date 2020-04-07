@@ -32,7 +32,7 @@ USER_AGENT = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3) AppleWebKit/537.36 
 class Torrent:
     __slots__ = ['data', 'hash', 'topic', 'post', 'autore', 'titolo', 'descrizione', 'categoria', 'title_full',
                  'published', 'published_parsed', 'magnet', 'magnet_short', 'other_urls', 'torrent_url', 'deeplink',
-                 'dimensione', 'forum_url']
+                 'dimensione', 'forum_url', 'dimensione_parsed']
 
     def __init__(self, entry):
         # così come erano ordinati nel csv
@@ -45,6 +45,7 @@ class Torrent:
         self.titolo = None
         self.descrizione = None
         self.dimensione = None
+        self.dimensione_parsed = None
         self.categoria = int(entry.tags[0]['term'])
 
         self.title_full = entry.title
@@ -57,6 +58,10 @@ class Torrent:
         match = re.search(r'(.*)\s\[(.*)\]$', entry.title, re.I)
         self.titolo = match.group(1).strip()
         self.descrizione = match.group(2).strip()
+
+        match = re.search(r'Size <b>([\w.]+)</b>', entry.description, re.I)
+        if match:
+            self.dimensione_parsed = match.group(1).lower()
 
         for link in entry.links:
             if link['rel'] == 'alternate':
@@ -72,6 +77,9 @@ class Torrent:
 
     @property
     def dimensione_pretty(self):
+        if self.dimensione_parsed:
+            return self.dimensione_parsed
+
         if not self.dimensione:
             return '? bytes'
 
