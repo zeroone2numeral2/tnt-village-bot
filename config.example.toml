@@ -8,6 +8,7 @@ unexpected_exceptions_notifications = -1001141547703 # the chat where to send un
 filename = "releases.sqlite"
 
 [feedsjob]
+feed_items = 20
 first = 60 # how much to wait from startup to execute the job for the first time (in minutes)
 interval = 180 # job's frequency (in minutes)
 new_torrents_notifications = 0 # the chat where to post about new releases (0 to disable)

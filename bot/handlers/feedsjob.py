@@ -25,7 +25,7 @@ from config import config
 
 logger = logging.getLogger('jobs')
 
-FEED_URL = 'http://tntvillage.scambioetico.org/rss.php?c=0&p=10'
+FEED_URL = 'http://tntvillage.scambioetico.org/rss.php?c=0&p=' + config.feedsjob.get('feed_items', 25)
 USER_AGENT = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.47 Safari/537.36'
 
 
