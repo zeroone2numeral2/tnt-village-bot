@@ -33,7 +33,7 @@ USER_AGENT = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3) AppleWebKit/537.36 
 class Torrent:
     __slots__ = ['data', 'hash', 'topic', 'post', 'autore', 'titolo', 'descrizione', 'categoria', 'title_full',
                  'published', 'published_parsed', 'magnet', 'magnet_short', 'other_urls', 'torrent_url', 'deeplink',
-                 'dimensione', 'forum_url', 'dimensione_parsed']
+                 'dimensione', 'forum_url', 'dimensione_parsed', 'rss_entry']
 
     PROPERTIES = ['dimensione_pretty', 'categoria_pretty', 'categoria_tag']
 
@@ -62,7 +62,7 @@ class Torrent:
         self.titolo = match.group(1).strip()
         self.descrizione = match.group(2).strip()
 
-        match = re.search(r'Size <b>([\w.]+)</b>', entry.description, re.I)
+        match = re.search(r'.*Size <b>([\w.\s]+)</b>', entry.description, re.I)
         if match:
             self.dimensione_parsed = match.group(1).lower()
 
@@ -77,6 +77,8 @@ class Torrent:
                 self.other_urls.append(link['href'])
 
         self.deeplink = 'https://t.me/{}?start={}'.format(torrentsbot.bot.username, self.topic)
+
+        self.rss_entry = entry
 
     @property
     def dimensione_pretty(self):
@@ -125,12 +127,12 @@ class Torrent:
 
         return tuple(result_list)
 
-    def format_dict(self):
-        ignored_properties = ('other_urls',)
-        return {k: getattr(self, k) for k in self.__slots__ + self.PROPERTIES if k not in ignored_properties}
+    def format_dict(self, ignored_properties=('other_urls', 'entry')):
+        properties = self.__slots__ + self.PROPERTIES
+        return {k: getattr(self, k) for k in properties if k not in ignored_properties}
 
     def to_json(self):
-        return json.dumps(self.format_dict(), indent=4)
+        return json.dumps(self.format_dict(ignored_properties=()), indent=4)
 
     def __repr__(self):
         base_string = 'Torrent({})'
