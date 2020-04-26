@@ -299,7 +299,18 @@ def feeds_job(context: CallbackContext):
             logger.warning('ignoring blacklisted entry: %s', entry.title)
             continue
 
-        torrent = entry_to_torrent(entry)
+        try:
+            torrent = entry_to_torrent(entry)
+        except Exception as e:
+            logger.error(
+                'error while converting entry "%s" to Torrent object: %s (continuing to the next entry...)',
+                entry.title,
+                str(e),
+                exc_info=True
+            )
+            utils.notify_error(e, context.bot)
+            continue
+
         if not torrent:
             # the torrent's topic (numeric) is already in the database
             continue

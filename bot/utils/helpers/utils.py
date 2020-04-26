@@ -3,6 +3,10 @@ import logging.config
 import json
 from html import escape
 
+from telegram import Bot, ParseMode
+
+from config import config
+
 logger = logging.getLogger(__name__)
 
 
@@ -43,3 +47,10 @@ def load_logging_config(file_name='logging.json'):
         logging_config = json.load(f)
 
     logging.config.dictConfig(logging_config)
+
+
+def notify_error(e: Exception, bot: Bot):
+    text = 'An error occurred while executing a job (safely catched): <code>{}</code>'.format(html_escape(str(e)))
+    if config.telegram.get('unexpected_exceptions_notifications', None):
+        bot.send_message(config.telegram.unexpected_exceptions_notifications, text, parse_mode=ParseMode.HTML)
+
