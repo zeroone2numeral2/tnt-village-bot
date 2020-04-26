@@ -334,7 +334,7 @@ def feeds_job(context: CallbackContext):
     else:
         logger.info('no new torrents to insert')
 
-    logger.info('job executed in %s seconds', time.time() - start_time)
+    logger.info('job executed in %d seconds', time.time() - start_time)
 
 
 torrentsbot.register_job(feeds_job, interval=config.feedsjob.interval * 60, first=config.feedsjob.first * 60)
