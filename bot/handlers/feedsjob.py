@@ -29,6 +29,11 @@ logger = logging.getLogger('jobs')
 FEED_URL = 'http://tntvillage.scambioetico.org/rss.php?c=0&p=' + str(config.feedsjob.get('feed_items', 25))
 USER_AGENT = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.47 Safari/537.36'
 
+FEED_ENTRY_BLACKLIST = [
+    # elenco di titoli di feed che ogni tanto compaiono nell'RSS per qualche motivo, e che possiamo ignorare
+    'Dump Release TNT Village 2019-08-30.csv'
+]
+
 
 class Torrent:
     __slots__ = ['data', 'hash', 'topic', 'post', 'autore', 'titolo', 'descrizione', 'categoria', 'title_full',
@@ -151,6 +156,14 @@ def request_page(url):
     )
 
     return result.text
+
+
+def is_blacklisted(entry):
+    for blacklisted_entry in FEED_ENTRY_BLACKLIST:
+        if blacklisted_entry.lower() in entry.title.lower():
+            return True
+
+    return False
 
 
 def entry_to_torrent(entry, fetch_forum_page=True):
@@ -282,6 +295,10 @@ def feeds_job(context: CallbackContext):
 
     new_torrents = list()
     for entry in feed.entries:
+        if is_blacklisted(entry):
+            logger.warning('ignoring blacklisted entry: %s', entry.title)
+            continue
+
         torrent = entry_to_torrent(entry)
         if not torrent:
             # the torrent's topic (numeric) is already in the database
