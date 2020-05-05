@@ -31,7 +31,8 @@ USER_AGENT = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3) AppleWebKit/537.36 
 
 FEED_ENTRY_BLACKLIST = [
     # elenco di titoli di feed che ogni tanto compaiono nell'RSS per qualche motivo, e che possiamo ignorare
-    'Dump Release TNT Village 2019-08-30.csv'
+    'Dump Release TNT Village 2019-08-30.csv',
+    'dump_tnt_29082019_password_protected.zip'
 ]
 
 
