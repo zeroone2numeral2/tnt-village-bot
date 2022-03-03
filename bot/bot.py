@@ -81,9 +81,11 @@ class TorrentsBot(Updater):
             logger.debug('importing module: %s', import_path)
             importlib.import_module(import_path)
 
-    def run(self, *args, **kwargs):
+    def run(self, jobs_enabled=True, *args, **kwargs):
         logger.warning('running as @%s', self.bot.username)
         self.start_polling(*args, **kwargs)
+        if not jobs_enabled:
+            self.job_queue.stop()
         self.idle()
 
     def add_handler(self, *args, **kwargs):
